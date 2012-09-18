@@ -1,7 +1,7 @@
 jQuery(document).ready(function(){
 
     var jq=jQuery;
-    jq("#clear-notifications").live('click',function(){
+    jq("#clear-notifications,#wp-admin-bar-clear-notifications a").live('click',function(){
         var $this=jq(this);
         var nonce=get_var_in_url($this.attr('href'),'_wpnonce');
         $this.text('clearing...');
@@ -14,6 +14,8 @@ jQuery(document).ready(function(){
             if(resp=='1'){
                 //remove notification count
                 jq("#bp-adminbar-notifications-menu").find('span').remove();
+                jq("#wp-admin-bar-bp-notifications").find('span').text('0');
+                jq("#wp-admin-bar-bp-notifications").find('ul').remove();
                 jq("#bp-adminbar-notifications-menu>ul").remove();
                 //remove all notifications
 
@@ -33,7 +35,7 @@ jQuery(document).ready(function(){
       return false;
     });
 function get_var_in_url(url,name){
-    console.log(url);
+    
     var urla=url.split("?");
     var qvars=urla[1].split("&");//so we hav an arry of name=val,name=val
     for(var i=0;i<qvars.length;i++){

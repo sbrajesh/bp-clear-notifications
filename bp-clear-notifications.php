@@ -2,11 +2,12 @@
 /**
  * Plugin Name:Bp Clear Notifications
  * description: Clears all bp notifications for the logged in User
- * Version: 1.0
+ * Version: 1.0.1
  * Pluhin URI:http://buddydev.com/plugins/bp-clear-notifications/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
+ * Last Updated: September 18, 2012
  */
 
 class ClearBpNotifications{
@@ -16,6 +17,8 @@ class ClearBpNotifications{
         add_action( 'bp_adminbar_menus', array($this,'add_notifications_menu'), 8 );
         add_action('wp_print_scripts',array($this,'load_js'));
         add_action('wp_ajax_cn_clear_notifications',array($this,'clear_all_notifications'));
+        add_action('admin_bar_menu',array($this,'add_notification_for_wp'),90);
+        
     }
 
     public function get_instance(){
@@ -25,6 +28,7 @@ class ClearBpNotifications{
     }
    function remove_bp_notifications_menu(){
        remove_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu', 8 );
+       remove_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 );
    }
    function add_notifications_menu(){
        global $bp;
@@ -63,6 +67,59 @@ class ClearBpNotifications{
 	echo '</ul>';
 	echo '</li>';
    }
+   //just a copy paste
+   function add_notification_for_wp(){
+   
+       	global $wp_admin_bar;
+        if(!function_exists('bp_is_active'))
+            return;
+        
+	if ( !is_user_logged_in() )
+		return false;
+
+	$notifications = bp_core_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
+	$count         = !empty( $notifications ) ? count( $notifications ) : 0;
+	$alert_class   = (int) $count > 0 ? 'pending-count alert' : 'count no-alert';
+	$menu_title    = '<span id="ab-pending-notifications" class="' . $alert_class . '">' . $count . '</span>';
+
+	// Add the top-level Notifications button
+	$wp_admin_bar->add_menu( array(
+		'parent'    => 'top-secondary',
+		'id'        => 'bp-notifications',
+		'title'     => $menu_title,
+		'href'      => bp_loggedin_user_domain(),
+	) );
+
+	if ( !empty( $notifications ) ) {
+		foreach ( (array) $notifications as $notification ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'bp-notifications',
+				'id'     => 'notification-' . $notification->id,
+				'title'  => $notification->content,
+				'href'   => $notification->href
+			) );
+		}
+                //add clear notification 
+                $wp_admin_bar->add_menu( array(
+				'parent' => 'bp-notifications',
+				'id'     => 'clear-notifications',
+				'title'  => '[x] Clear All Notifications',
+				'href'   => bp_core_get_user_domain(bp_loggedin_user_id()).'?clear-all=true'.'&_wpnonce='.wp_create_nonce('clear-all-notifications-for-'.bp_loggedin_user_id())
+			) );
+               
+	} else {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'bp-notifications',
+			'id'     => 'no-notifications',
+			'title'  => __( 'No new notifications', 'buddypress' ),
+			'href'   => bp_loggedin_user_domain()
+		) );
+	}
+
+	return;
+   }
+   
+   
    function load_js(){
       if(!is_user_logged_in())
           return;
