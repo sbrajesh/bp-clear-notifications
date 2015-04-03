@@ -19,7 +19,7 @@ class Clear_BP_Notifications_Helper {
         add_action( 'bp_loaded', array( $this, 'remove_bp_notifications_menu' ) );
         add_action( 'bp_adminbar_menus', array( $this, 'add_notifications_menu' ), 8 );
         add_action( 'wp_print_scripts', array( $this, 'load_js' ) );
-        add_action( 'wp_ajax_cn_clear_notifications', array( $this, 'clear_all_notifications' ) );
+        add_action( 'wp_ajax_bpcn_clear_notifications', array( $this, 'clear_all_notifications' ) );
         add_action( 'admin_bar_menu', array( $this, 'add_notification_for_wp' ), 90 );
         
     }

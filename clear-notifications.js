@@ -10,7 +10,7 @@ jQuery( document ).ready( function() {
         $this.text( 'clearing...' );//bad idea as localization problem
 		
         jq.post( ajaxurl, {
-							action:		'cn_clear_notifications',
+							action:		'bpcn_clear_notifications',
 							_wpnonce:	nonce,
 							cookie:		encodeURIComponent(document.cookie)
 						},
