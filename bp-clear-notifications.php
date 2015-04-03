@@ -163,7 +163,7 @@ class Clear_BP_Notifications_Helper {
     }
 	
     //helper, delete all notifications for user
-    public function delete_notifications_for_user($user_id){
+    public static function delete_notifications_for_user($user_id){
         global $bp, $wpdb;
 
         return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->core->table_name_notifications} WHERE user_id = %d ", $user_id ) );
