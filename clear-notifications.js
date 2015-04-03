@@ -2,7 +2,7 @@ jQuery( document ).ready( function() {
 	
     var jq = jQuery;
 	
-    jq("#clear-notifications,#wp-admin-bar-clear-notifications a").live( 'click', function() {
+    jq( document ).on( 'click', '#clear-notifications,#wp-admin-bar-clear-notifications a',  function() {
         var $this = jq( this );
 		
         var nonce = get_var_in_url( $this.attr( 'href' ), '_wpnonce' );
@@ -33,7 +33,7 @@ jQuery( document ).ready( function() {
     });
 
     //for individual notification item
-    jq( "#bp-adminbar-notifications-menu span.close-notification" ).live( 'click', function() {
+    jq( document ).on( 'click', '#bp-adminbar-notifications-menu span.close-notification',  function() {
         
 		var $li = jq( this ).parent();
         return false;
