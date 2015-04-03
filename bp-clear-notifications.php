@@ -2,12 +2,12 @@
 /**
  * Plugin Name: BP Clear Notifications
  * description: Clears all bp notifications for the logged in User
- * Version: 1.0.1
+ * Version: 1.0.2
  * Pluhin URI: http://buddydev.com/plugins/bp-clear-notifications/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
  * License: GPL
- * Last Updated: September 18, 2012
+ * Last Updated: Mapril 3, 2015
  */
 
 class Clear_BP_Notifications_Helper {
