@@ -48,10 +48,10 @@ class Clear_BP_Notifications_Helper {
 	
 	public function add_notifications_menu() {
 		
+		if( ! $this->is_active() )
+		   return;
+		
 		$bp = buddypress();
-
-		if ( !is_user_logged_in() )
-			return false;
 
 		echo '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
 		_e( 'Notifications', 'buddypress' );
@@ -87,14 +87,12 @@ class Clear_BP_Notifications_Helper {
 	//just a copy paste
 	public function add_notification_for_wp() {
 
+		if( ! $this->is_active() )
+		   return;
+		
 		global $wp_admin_bar;
 
-		if( ! function_exists('bp_is_active') )
-			return;
-
-		if ( ! is_user_logged_in() || ! bp_is_active( 'notifications') )
-			return false;
-
+			
 		$notifications = bp_core_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
 		$count         = !empty( $notifications ) ? count( $notifications ) : 0;
 		$alert_class   = (int) $count > 0 ? 'pending-count alert' : 'count no-alert';
@@ -140,7 +138,7 @@ class Clear_BP_Notifications_Helper {
 
 	public function load_js() {
 		
-		if( ! is_user_logged_in() )
+		if( ! $this->is_active() )
 		   return;
 		
 		wp_register_script( 'clear-bp-notificatins', plugin_dir_url( __FILE__ ) . 'clear-notifications.js', array( 'jquery' ) );
@@ -164,11 +162,23 @@ class Clear_BP_Notifications_Helper {
 	
     //helper, delete all notifications for user
     public static function delete_notifications_for_user($user_id){
-        global $bp, $wpdb;
+        global  $wpdb;
 
-        return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->core->table_name_notifications} WHERE user_id = %d ", $user_id ) );
+		$table = buddypress()->notifications->table_name;
+		
+        return $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE user_id = %d ", $user_id ) );
 
     }
+	
+	
+	public function is_active() {
+		
+		if( is_user_logged_in() && function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) ) {
+			return true;
+		}
+		
+		return false;
+	}
 }
 //instantiate
 Clear_BP_Notifications_Helper::get_instance();
