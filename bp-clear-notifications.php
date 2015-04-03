@@ -10,7 +10,7 @@
  * Last Updated: September 18, 2012
  */
 
-class ClearBpNotifications {
+class Clear_BP_Notifications_Helper {
 	
     private static $instance;
 	
@@ -23,8 +23,13 @@ class ClearBpNotifications {
         add_action( 'admin_bar_menu', array( $this, 'add_notification_for_wp' ), 90 );
         
     }
-
-    public function get_instance() {
+	
+	/**
+	 * Singleton Instance
+	 * 
+	 * @return Clear_BP_Notifications_Helper
+	 */
+    public static function get_instance() {
 		
         if( ! isset( self::$instance ) )
                 self::$instance = new self();
@@ -166,4 +171,4 @@ class ClearBpNotifications {
     }
 }
 //instantiate
-ClearBpNotifications::get_instance();
+Clear_BP_Notifications_Helper::get_instance();
