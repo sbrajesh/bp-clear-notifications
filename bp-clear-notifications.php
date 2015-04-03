@@ -56,7 +56,7 @@ class Clear_BP_Notifications_Helper {
 		echo '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
 		_e( 'Notifications', 'buddypress' );
 
-		if ( $notifications = bp_core_get_notifications_for_user( $bp->loggedin_user->id) ) { ?>
+		if ( $notifications = bp_notifications_get_notifications_for_user( $bp->loggedin_user->id) ) { ?>
 			<span><?php echo count( $notifications ) ?></span>
 		<?php
 		}
@@ -92,8 +92,10 @@ class Clear_BP_Notifications_Helper {
 		
 		global $wp_admin_bar;
 
-			
-		$notifications = bp_core_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
+		$user_id = get_current_user_id();
+		$logged_user_url = bp_loggedin_user_domain();
+		
+		$notifications = bp_notifications_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
 		$count         = !empty( $notifications ) ? count( $notifications ) : 0;
 		$alert_class   = (int) $count > 0 ? 'pending-count alert' : 'count no-alert';
 		$menu_title    = '<span id="ab-pending-notifications" class="' . $alert_class . '">' . $count . '</span>';
@@ -103,7 +105,7 @@ class Clear_BP_Notifications_Helper {
 			'parent'    => 'top-secondary',
 			'id'        => 'bp-notifications',
 			'title'     => $menu_title,
-			'href'      => bp_loggedin_user_domain(),
+			'href'      => $logged_user_url,
 		) );
 
 		if ( !empty( $notifications ) ) {
@@ -120,7 +122,7 @@ class Clear_BP_Notifications_Helper {
 					'parent' => 'bp-notifications',
 					'id'     => 'clear-notifications',
 					'title'  => '[x] Clear All Notifications',
-					'href'   => bp_core_get_user_domain(bp_loggedin_user_id()).'?clear-all=true'.'&_wpnonce='.wp_create_nonce('clear-all-notifications-for-'.bp_loggedin_user_id())
+					'href'   => $logged_user_url.'?clear-all=true'.'&_wpnonce='.wp_create_nonce('clear-all-notifications-for-' . $user_id )
 				) );
 
 		} else {
@@ -128,7 +130,7 @@ class Clear_BP_Notifications_Helper {
 				'parent' => 'bp-notifications',
 				'id'     => 'no-notifications',
 				'title'  => __( 'No new notifications', 'buddypress' ),
-				'href'   => bp_loggedin_user_domain()
+				'href'   => $logged_user_url
 			) );
 		}
 
