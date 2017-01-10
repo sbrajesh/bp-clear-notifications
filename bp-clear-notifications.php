@@ -1,13 +1,12 @@
 <?php
 /**
- * Plugin Name: BP Clear Notifications
- * description: Clears all bp notifications for the logged in User
+ * Plugin Name: BuddyPress Clear Notifications
+ * description: Clears all BuddyPress notifications for the logged in User
  * Version: 1.0.2
- * Pluhin URI: http://buddydev.com/plugins/bp-clear-notifications/
- * Author: Brajesh Singh
- * Author URI: http://buddydev.com/members/sbrajesh
+ * Plugin URI: https://buddydev.com/plugins/bp-clear-notifications/
+ * Author: BuddyDev
+ * Author URI: https://buddydev.com/
  * License: GPL
- * Last Updated: Mapril 3, 2015
  */
 
 class Clear_BP_Notifications_Helper {
@@ -31,26 +30,30 @@ class Clear_BP_Notifications_Helper {
 	 */
     public static function get_instance() {
 		
-        if( ! isset( self::$instance ) )
-                self::$instance = new self();
-		
+        if ( ! isset( self::$instance ) ) {
+	        self::$instance = new self();
+        }
+
         return self::$instance;
     }
 	
 	public function remove_bp_notifications_menu() {
 		
-		if( has_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu' ) )
+		if ( has_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu' ) ) {
 			remove_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu', 8 );
-		
-		if( has_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 ) )
+		}
+
+		if ( has_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 ) ) {
 			remove_action( 'admin_bar_menu', 'bp_members_admin_bar_notifications_menu', 90 );
+		}
 	}
 	
 	public function add_notifications_menu() {
 		
-		if( ! $this->is_active() )
-		   return;
-		
+		if ( ! $this->is_active() ) {
+			return;
+		}
+
 		$bp = buddypress();
 
 		echo '<li id="bp-adminbar-notifications-menu"><a href="' . $bp->loggedin_user->domain . '">';
@@ -87,9 +90,10 @@ class Clear_BP_Notifications_Helper {
 	//just a copy paste
 	public function add_notification_for_wp() {
 
-		if( ! $this->is_active() )
-		   return;
-		
+		if ( ! $this->is_active() ) {
+			return;
+		}
+
 		global $wp_admin_bar;
 
 		$user_id = get_current_user_id();
@@ -122,7 +126,7 @@ class Clear_BP_Notifications_Helper {
 					'parent' => 'bp-notifications',
 					'id'     => 'clear-notifications',
 					'title'  => '[x] Clear All Notifications',
-					'href'   => $logged_user_url.'?clear-all=true'.'&_wpnonce='.wp_create_nonce('clear-all-notifications-for-' . $user_id )
+					'href'   => $logged_user_url.'?clear-all=true'.'&_wpnonce=' . wp_create_nonce('clear-all-notifications-for-' . $user_id )
 				) );
 
 		} else {
@@ -140,11 +144,12 @@ class Clear_BP_Notifications_Helper {
 
 	public function load_js() {
 		
-		if( ! $this->is_active() )
-		   return;
-		
-		wp_register_script( 'clear-bp-notificatins', plugin_dir_url( __FILE__ ) . 'clear-notifications.js', array( 'jquery' ) );
-		wp_enqueue_script( 'clear-bp-notificatins' );
+		if ( ! $this->is_active() ) {
+			return;
+		}
+
+		wp_register_script( 'clear-bp-notifications', plugin_dir_url( __FILE__ ) . 'clear-notifications.js', array( 'jquery' ) );
+		wp_enqueue_script( 'clear-bp-notifications' );
 	}
 	
 	//ajax'd delete notification
@@ -163,19 +168,22 @@ class Clear_BP_Notifications_Helper {
     }
 	
     //helper, delete all notifications for user
-    public static function delete_notifications_for_user($user_id){
+    public static function delete_notifications_for_user($user_id) {
         global  $wpdb;
+
+		if ( ! bp_is_active( 'notifications') ) {
+			return ;
+		}
 
 		$table = buddypress()->notifications->table_name;
 		
         return $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE user_id = %d ", $user_id ) );
-
     }
 	
 	
 	public function is_active() {
 		
-		if( is_user_logged_in() && function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) ) {
+		if ( is_user_logged_in() && function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) ) {
 			return true;
 		}
 		
