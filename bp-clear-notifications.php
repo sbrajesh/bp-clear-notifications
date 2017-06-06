@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BuddyPress Clear Notifications
  * description: Clears all BuddyPress notifications for the logged in User
- * Version: 1.0.2
+ * Version: 1.0.3
  * Plugin URI: https://buddydev.com/plugins/bp-clear-notifications/
  * Author: BuddyDev
  * Author URI: https://buddydev.com/
@@ -16,11 +16,14 @@ class Clear_BP_Notifications_Helper {
     private function __construct() {
 		
         add_action( 'bp_loaded', array( $this, 'remove_bp_notifications_menu' ) );
+
         add_action( 'bp_adminbar_menus', array( $this, 'add_notifications_menu' ), 8 );
-        add_action( 'wp_print_scripts', array( $this, 'load_js' ) );
-        add_action( 'wp_ajax_bpcn_clear_notifications', array( $this, 'clear_all_notifications' ) );
-        add_action( 'admin_bar_menu', array( $this, 'add_notification_for_wp' ), 90 );
-        
+
+        add_action( 'wp_enqueue_scripts', array( $this, 'load_js' ) );
+	    add_action( 'admin_bar_menu', array( $this, 'add_notification_for_wp' ), 90 );
+
+	    add_action( 'wp_ajax_bpcn_clear_notifications', array( $this, 'clear_all_notifications' ) );
+
     }
 	
 	/**
@@ -175,9 +178,10 @@ class Clear_BP_Notifications_Helper {
 			return ;
 		}
 
-		$table = buddypress()->notifications->table_name;
+		BP_Notifications_Notification::mark_all_for_user( $user_id, 0 );
+		//$table = buddypress()->notifications->table_name;
 		
-        return $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE user_id = %d ", $user_id ) );
+        //return $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE user_id = %d ", $user_id ) );
     }
 	
 	
