@@ -55,8 +55,9 @@ jQuery( document ).ready( function() {
 			
 			var qv = qvars[i].split("=");
 			
-			if( qv[0] == name )
-				return qv[1];
+			if( qv[0] === name ) {
+                return qv[1];
+            }
 		}
       
 		return '';
