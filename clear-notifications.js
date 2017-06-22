@@ -2,7 +2,7 @@ jQuery( document ).ready( function() {
 	
     var jq = jQuery;
 	
-    jq( document ).on( 'click', '#clear-notifications,#wp-admin-bar-clear-notifications a',  function() {
+    jq( document ).on( 'click', '#clear-notifications,#wp-admin-bar-clear-notifications a, .header-notifications .pop a:last-child',  function() {
         var $this = jq( this );
 		
         var nonce = get_var_in_url( $this.attr( 'href' ), '_wpnonce' );
@@ -16,15 +16,21 @@ jQuery( document ).ready( function() {
 						},
 						function( resp ) {
 							
-							if( resp == '1' ) {
+							if( resp == 1 ) {
+
 								//remove notification count
 								jq( "#bp-adminbar-notifications-menu").find( 'span' ).remove();
 								jq( "#wp-admin-bar-bp-notifications").find( 'span' ).text( '0' );
 								jq( "#wp-admin-bar-bp-notifications").find( 'ul' ).remove();
 								jq( "#bp-adminbar-notifications-menu>ul").remove();
+
+								// It is a temporary solution but the boss theme has really messed up notification drop down.
+								// It is not possible to identify the link for clearing.
+								jq('.header-notifications').find('.pop').remove();
+								jq('.header-notifications').find('#ab-pending-notifications').remove();
 								//remove all notifications
 
-								$this.remove();//incase someone has used it somewhere else
+								$this.remove();//in case someone has used it somewhere else
 
 							}
 						}
