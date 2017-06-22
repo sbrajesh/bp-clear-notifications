@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BuddyPress Clear Notifications
  * description: Clears all BuddyPress notifications for the logged in User
- * Version: 1.0.3
+ * Version: 1.0.4
  * Plugin URI: https://buddydev.com/plugins/bp-clear-notifications/
  * Author: BuddyDev
  * Author URI: https://buddydev.com/
